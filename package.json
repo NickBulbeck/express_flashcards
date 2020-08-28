@@ -1,0 +1,30 @@
+{
+  "name": "flashcards",
+  "version": "1.0.0",
+  "description": "Practice app making flashcairds",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NickBulbeck/express_flashcards.git"
+  },
+  "keywords": [
+    "Dinnae",
+    "fuss"
+  ],
+  "author": "Nick Bulbeck",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NickBulbeck/express_flashcards/issues"
+  },
+  "homepage": "https://github.com/NickBulbeck/express_flashcards#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.1.2"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
