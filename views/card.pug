@@ -1,0 +1,13 @@
+extends layout.pug
+
+block content
+	section#content
+		ul
+			each colour in colours 
+				li=colour
+		h2= prompt
+		if hint
+			p
+				i Hint: #{hint}
+		else
+			p ... there's nae hint for this yin!
