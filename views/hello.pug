@@ -2,8 +2,11 @@ extends layout.pug
 
 block content
   section#content
-    h2 Welcome!
-    form(action='/hello', method='post')
-      label Please enter your name:
-        input(type='text', name='username')
-      button(type='submit') Submit
+    if name
+      h2 Hello and welcome to TreeHouse world, #{name}!
+    else
+      h2 Welcome to TreeHouse world!
+      form(action='/hello', method='post')
+        label Please enter your name:
+          input(type='text', name='username')
+        button(type='submit') Submit

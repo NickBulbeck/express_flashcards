@@ -1,6 +1,6 @@
 const express = require('express');
-
 const app = express();
+const bodyParser = require('body-parser');
 
 const colours = [
   'red',
@@ -12,7 +12,17 @@ const colours = [
   ];
 
 app.set('view engine', 'pug'); // app.set defines settings in express. By default, it looks in a folder called
-							   // views; you can re-set this using 'views' and a path.
+							   // views; you can re-set this using 'views' and a path. This is what is used when you
+							   // call res.render, as distinct fae res.send (which just sends a string).
+app.use(bodyParser.urlencoded({extended:false})); // This is specific to handling browser HTML requests. By default, req.body
+												  // is 'undefined', and it has to be parsed (a bit like JSON.parse) before
+												  // it's readable. Dinnae fuss about the syntax of this line. It's just one
+												  // of those things you just have to remember to include (and you'll probably 
+												  // need to look it up every time).
+												  // Including this line is all you need to do: this signals to express that it
+												  // should use this format to understand req.body, which will now become a 
+												  // readable object containing all of the element names and their values as
+												  // set up in the HTML form - in this case, in hello.pug.
 
 // app.get() HANDLES get-requests: it's NOT sending one!
 app.get('/', (req, res) => { // request, response - by convention
@@ -62,14 +72,12 @@ app.get('/hello', (req,res) => {
 })
 
 app.post('/hello', (req,res) => {
-  res.render('hello');
-  console.log("Something...");
-})
-
+  res.render('hello',{name:req.body.username}); // name is foadyb, but we'll use it in the pug template; req.body
+  console.dir(req.body);						// is express standard, and the .username property is set up by the
+})												// fact that our hello.pug form has an element with a 'name' of 
+												// 'username'.	
 app.listen(3000, () => {
   console.log('The application is running on localhost.3000');
 });
 
-// Add /hello route
-// Add a hello template in the views directory, extending layout
-// Serve the hello template fae /hello
+
