@@ -39,7 +39,7 @@ app.get('/cards', (req, res) => {
 	res.render('card',locals);
 })
 
-app.get('/hello', (req, res) => { // request, response - by convention
+app.get('/index', (req, res) => { // request, response - by convention
   // res.send('<h2 style="font-family: sans-serif">Hello Nick, JS developer!</h1>'); // this will send whatever's
   																				     // in the string. Or:
   res.render('index') // that is, the view engine (pug) looks for the (opinionated) path views/index.pug.
@@ -57,6 +57,19 @@ app.get('/sandbox', (req, res) => {
 	res.render('sandbox',locals);
 })
 
+app.get('/hello', (req,res) => {
+  res.render('hello');
+})
+
+app.post('/hello', (req,res) => {
+  res.render('hello');
+  console.log("Something...");
+})
+
 app.listen(3000, () => {
   console.log('The application is running on localhost.3000');
 });
+
+// Add /hello route
+// Add a hello template in the views directory, extending layout
+// Serve the hello template fae /hello
