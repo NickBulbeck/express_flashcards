@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const colours = [
   'red',
@@ -23,6 +24,9 @@ app.use(bodyParser.urlencoded({extended:false})); // This is specific to handlin
 												  // should use this format to understand req.body, which will now become a 
 												  // readable object containing all of the element names and their values as
 												  // set up in the HTML form - in this case, in hello.pug.
+app.use(cookieParser()); // Unlike bodyParser(), cookieParser() doesn't need an argument.
+
+
 
 // app.get() HANDLES get-requests: it's NOT sending one!
 app.get('/', (req, res) => { // request, response - by convention
@@ -68,10 +72,18 @@ app.get('/sandbox', (req, res) => {
 })
 
 app.get('/hello', (req,res) => {
-  res.render('hello');
+  // Here, we're going to pass in the user's name from the cookie we've set in 
+  // the cookie in app.post
+  res.render('hello', {name:req.cookies.username});
+  // The first time the app is set up, assuming a clear cache, there's no cookie so no
+  // name. Remember, in hello.pug, if there's a name, we render it; otherwise we don't.
+  // You can empty cookies in devtools, but there's a better way.
 })
 
 app.post('/hello', (req,res) => {
+  res.cookie('username', req.body.username); // 'username' is the name of the cookie, and req.body.username is the value.
+                                             // The browser will send this cookie with each request.
+                                             // See also the next bit...
   res.render('hello',{name:req.body.username}); // name is foadyb, but we'll use it in the pug template; req.body
   console.dir(req.body);						// is express standard, and the .username property is set up by the
 })												// fact that our hello.pug form has an element with a 'name' of 
