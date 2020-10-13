@@ -29,8 +29,9 @@ app.use(cookieParser()); // Unlike bodyParser(), cookieParser() doesn't need an 
 
 
 // app.get() HANDLES get-requests: it's NOT sending one!
-app.get('/', (req, res) => { // request, response - by convention
-  res.send('<h1 style="font-family: sans-serif">I love TreeHouse...</h1>');
+app.get('/', (req, res) => { // request, response - call them req and res by convention
+  // res.send('<h1 style="font-family: sans-serif">I love TreeHouse...</h1>');
+  res.render('index'); // that is, the view engine (pug) looks for the (opinionated) path views/index.pug.
 }); 
 
 app.get('/cards', (req, res) => {
@@ -71,6 +72,15 @@ app.get('/sandbox', (req, res) => {
 	res.render('sandbox',locals);
 })
 
+/*
+  And Now: re-directing.
+  A re-direct is a RESPONSE sent by the server when chosen conditions are satisfied. The client then
+  receives this response and sends out another request, using the re-direct URL. Here, we want to
+  set up the app so that once the user has input their name, they're re-directed to the home page; 
+  i.e. from localhost:3000/hello to just localhost:3000.
+  So, you use the res.redirect method instead of res.render.
+*/
+
 app.get('/hello', (req,res) => {
   // Here, we're going to pass in the user's name from the cookie we've set in 
   // the cookie in app.post
@@ -78,13 +88,18 @@ app.get('/hello', (req,res) => {
   // The first time the app is set up, assuming a clear cache, there's no cookie so no
   // name. Remember, in hello.pug, if there's a name, we render it; otherwise we don't.
   // You can empty cookies in devtools, but there's a better way.
+  // DELETING COOKIES VIA DEVTOOLS:
+  // elements/console/sources/network/performance/APPLICATION (i.e. select application)
+  // On the left sidebar of the devtools area, you'll see Storage/Cookies. Open this, select
+  // the cookie, right-click and delete.
 })
 
 app.post('/hello', (req,res) => {
   res.cookie('username', req.body.username); // 'username' is the name of the cookie, and req.body.username is the value.
                                              // The browser will send this cookie with each request.
                                              // See also the next bit...
-  res.render('hello',{name:req.body.username}); // name is foadyb, but we'll use it in the pug template; req.body
+  // res.render('hello',{name:req.body.username}); // name is foadyb, but we'll use it in the pug template; req.body
+  res.redirect('/'); // Going with this instead of a direct render, commented out above
   console.dir(req.body);						// is express standard, and the .username property is set up by the
 })												// fact that our hello.pug form has an element with a 'name' of 
 												// 'username'.	
