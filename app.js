@@ -31,8 +31,20 @@ app.use(cookieParser()); // Unlike bodyParser(), cookieParser() doesn't need an 
 // app.get() HANDLES get-requests: it's NOT sending one!
 app.get('/', (req, res) => { // request, response - call them req and res by convention
   // res.send('<h1 style="font-family: sans-serif">I love TreeHouse...</h1>');
-  res.render('index'); // that is, the view engine (pug) looks for the (opinionated) path views/index.pug.
+  const nameFromCookie = req.cookies.username; // I think 'nameFromCookie' is a clearer eg than 'name'
+  // res.render('index',{ name:nameFromCookie } ); // that is, the view engine (pug) looks for the (opinionated) path views/index.pug.
+  			// Andrew called it 'name' and then set it as {name:name}, and THEN used ES6 shorthand for when the key
+  			// and the value are the same, setting it as { name }. I think this is highly confusing, but it's something to
+  			// be aware of.
+  if (nameFromCookie) {
+  	res.render('index',{ name:nameFromCookie } );
+  } else {
+  	res.redirect('/hello');
+  }
 }); 
+
+
+
 
 app.get('/cards', (req, res) => {
 	const tryThis = () => {
@@ -83,11 +95,22 @@ app.get('/sandbox', (req, res) => {
 
 app.get('/hello', (req,res) => {
   // Here, we're going to pass in the user's name from the cookie we've set in 
-  // the cookie in app.post
-  res.render('hello', {name:req.cookies.username});
+  // the cookie in app.post, if it exists.
+
+  if (req.cookies.username) {
+  	res.redirect('/');
+  } else {
+  	res.render('hello');
+  }
+
+
+
+  // Initially, this line was in here unconditionally:
+  // res.render('hello');
+  //
   // The first time the app is set up, assuming a clear cache, there's no cookie so no
   // name. Remember, in hello.pug, if there's a name, we render it; otherwise we don't.
-  // You can empty cookies in devtools, but there's a better way.
+  // You can empty cookies in devtools, but there's a better way which we'll come to.
   // DELETING COOKIES VIA DEVTOOLS:
   // elements/console/sources/network/performance/APPLICATION (i.e. select application)
   // On the left sidebar of the devtools area, you'll see Storage/Cookies. Open this, select
@@ -103,8 +126,19 @@ app.post('/hello', (req,res) => {
   console.dir(req.body);						// is express standard, and the .username property is set up by the
 })												// fact that our hello.pug form has an element with a 'name' of 
 												// 'username'.	
+
+app.post('/goodbye', (req,res) => {
+	res.clearCookie('username');
+	res.redirect('/hello');
+})
+
 app.listen(3000, () => {
   console.log('The application is running on localhost.3000');
 });
 
+
+// pug stuff for potential pasting into index.pug
+    // if name
+    //   h2 Hello and welcome to TreeHouse world, #{name}!
+    // else
 

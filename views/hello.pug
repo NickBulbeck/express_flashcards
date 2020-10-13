@@ -2,9 +2,6 @@ extends layout.pug
 
 block content
   section#content
-    if name
-      h2 Hello and welcome to TreeHouse world, #{name}!
-    else
       h2 Welcome to TreeHouse world!
       form(action='/hello', method='post')
         label Please enter your name:
