@@ -16,6 +16,53 @@ app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({extended:false})); 
 app.use(cookieParser()); 
 
+/*  MIDDLEWARE
+  The basic format for using middleware is a function with three parameters:
+    (req,res,next) => {... blah... };
+  'blah' here is the function that the middleware actually comprises. It can read and modify
+   the request and response objects. 
+  'next' is quite interesting... it's a function that must be called once the middleware function has
+  finished.
+  To run middleware in response to every request:
+  app.use((req,res,next) => {});
+  To run it for a specific route:
+  app.use('/foadyb',(req,res,next) => {});
+  To run it only for get-requests:
+  app.get('/foadyb',(req,res,next) => {});
+*/
+// Our first example of middleware:
+
+app.use((req,res,next) => {  // This (skeleton!) middleware runs every time a request comes into the app.
+  console.log("One");        // Thus, 'req' is defined by virtue of the context in which JavaScript will
+  next();                    // always automatically call this anonymous function.
+  },                         // ... comma to separate multiple functions for the same piece of middleware
+  (req,res,next) => {           // second function: must still have the argument list and the => remember.
+  console.log("One point one"); // This indentation's a bit off TBH. 
+  next();                       // But this logs after "One", and before "Two"
+  }
+);
+// Once you add the argument '/one', the function only logs to the console when you go to 
+// localhost:3000/one in the browser
+
+app.use((req,res,next) => {  // There's some minor potential confusion here. next() from the previous 
+  console.log("Two");        // middleware calls the next middleware function that's declared in the
+  next();                    // code. In other words, this one. So, the console logs out firstly 'One',
+});                          // and then 'Two'.
+
+// Now, we'll pass information between functions.
+app.use((req,res,next) => {
+  req.message = 'This message made it!' // .message is a foadyb property (mind how you can do that with objects)
+  next();
+});
+app.use((req,res,next) => {
+  console.log(`Three: ${req.message}`);
+  next(); // You MUST include next() after the last middleware function - if it's not there,
+          // the app will hang and eventually time out.
+});
+
+
+// End of middleware examples
+
 app.get('/', (req, res) => { 
   const nameFromCookie = req.cookies.username;
   if (nameFromCookie) {
