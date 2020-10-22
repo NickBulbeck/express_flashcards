@@ -12,6 +12,16 @@ const colours = [
   'purple'
   ];
 
+/*  EXECUTION FLOW
+  Really interesting, and important. 
+  When express sets up the server, at line 2 in this case, it calls a number of functions. Many of the
+  middleware functions are closures - that is, they themselves return functions. When a request is made
+  by a client, it's picked up by app.listen() and the request and response objects are created. They are 
+  then passed from one piece of middleware to the next, down the line. It starts with the first piece of
+  middleware in the code that is compatible with its url; then goes to the next, and so on, until a response
+  is sent back to the client.
+*/
+
 app.set('view engine', 'pug'); 
 app.use(bodyParser.urlencoded({extended:false})); 
 app.use(cookieParser()); 
@@ -22,7 +32,9 @@ app.use(cookieParser());
   'blah' here is the function that the middleware actually comprises. It can read and modify
    the request and response objects. 
   'next' is quite interesting... it's a function that must be called once the middleware function has
-  finished.
+  finished; it closes off the middleware. You need next() if your middleware doesn't send a response
+  to the client. If you don't send a response, with res.render/send or similar, AND you don't have a
+  next(); statement, the app will hang at the point in the code where the next() should be.
   To run middleware in response to every request:
   app.use((req,res,next) => {});
   To run it for a specific route:
@@ -59,6 +71,18 @@ app.use((req,res,next) => {
   next(); // You MUST include next() after the last middleware function - if it's not there,
           // the app will hang and eventually time out.
 });
+// Now, we'll look at using next() to handle errors.
+app.use((req,res,next) => {
+  console.log("Hello");
+  const err = new Error("Nick's patent test error hingmy");
+  next(err); // Passing the error in as an argument triggers an error; the app falls over at this point. "Hello"
+})           // is logged, but next() effectively sends the error as a response (it appears in the browser) and
+             // "world" is not logged.
+app.use((req,res,next) => {
+  console.log("world");
+  next();
+})
+
 
 
 // End of middleware examples
