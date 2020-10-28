@@ -35,6 +35,9 @@ app.use(cookieParser());
   finished; it closes off the middleware. You need next() if your middleware doesn't send a response
   to the client. If you don't send a response, with res.render/send or similar, AND you don't have a
   next(); statement, the app will hang at the point in the code where the next() should be.
+  The middleware function, as handled under the bonnet by app.use(), is by default expecting three arguments. The
+  first is the request object, the second is the response object, and the third is the next-y callback function.
+  The names 'req', 'res' and 'next()' are what we conventionally call them.
   To run middleware in response to every request:
   app.use((req,res,next) => {});
   To run it for a specific route:
@@ -74,18 +77,30 @@ app.use((req,res,next) => {
 // Now, we'll look at using next() to handle errors.
 app.use((req,res,next) => {
   console.log("Hello");
-  const err = new Error("Nick's patent test error hingmy");
-  next(err); // Passing the error in as an argument triggers an error; the app falls over at this point. "Hello"
+  const err = new Error("Nick's patent test hingmy, with a deliberate error in the first bit of middleware...");
+  err.status = 500; // You can modify the error object just like any other. Whilst an HTTP error has a built-in
+                    // status, the native JavaScript error doesn't; so we'll add one. This will be the value
+                    // that error.pug receives as 'error.status'.
+  next(); // Use the line after this one to test the error-handling middleware instead of the not-found
+          // default app.use().
+  //next(err); // Passing the error in as an argument triggers an error; the app falls over at this point. "Hello"
 })           // is logged, but next() effectively sends the error as a response (it appears in the browser) and
              // "world" is not logged.
 app.use((req,res,next) => {
   console.log("world");
   next();
 })
+// And NOW, we'll consider explicit error-handling middleware.
+// Whereas default middleware is built around three arguments (req,res,next), middleware designed to
+// handle errors specifically has four: (err,req,res,next). The (err) parameter is an error object.
+// When express finds a function call with an error object passed into it, it looks for the first middleware
+// it can find that has four parameters.
+// If there isn't one, express uses its own native error-handler by default. This sends out the standard stack-
+// trace-like text dump. But we can write one to over-ride this, to make the output more readable.
 
+// By convention, put your error-handler right at the end (c.f. try-catch-finally).
 
-
-// End of middleware examples
+// Main methods
 
 app.get('/', (req, res) => { 
   const nameFromCookie = req.cookies.username;
@@ -148,6 +163,31 @@ app.post('/goodbye', (req,res) => {
 	res.clearCookie('username');
 	res.redirect('/hello');
 })
+
+// Error-handling middleware:
+
+// We'll have two calls here. Firstly, when there's no actual error created by any middleware or route,
+// express goes through all the routes looking for one that matches the request url. If it doesn't find
+// one, it sends nothing and you just get a browser default message. So first, we'll set up a route-less
+// app.use() to act as a catch-block that will be run if express reaches the end of the code and hasn't
+// sent a response yet. Secondly, we'll set up an actual error-handler.
+
+app.use((req,res,next) => {
+  const err = new Error("Not found... :-(");
+  err.status = 404;
+  next(err);
+})
+
+app.use((err,req,res,next) => {
+  res.locals.error = err; // As above, modify the res object so that we don't have to pass it separately.
+  res.status(err.status); // This modifies the status of the response object itself, so that the HTTP 
+                          // response status will be 500 (the value we set err.status as, earlier on).
+  res.render('error',err) // Makes sense to render a particular error message using the view engine. Also
+                          // note that the error object contains useful info, so we'll pass that in at the
+                          // same time.
+})
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 app.listen(3000, () => {
   console.log('The application is running on localhost.3000');
