@@ -18,6 +18,18 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(cookieParser()); 
 
 
+const mainRoutes = require('./routes'); // remember the convetion that if the ./routes folder 
+                                    // contains a file called index.js, node will import it
+                                    // automatically. We could have require('./routes/index.js')
+                                    // of course.
+const cardRoutes = require('./routes/cards') // again, the .js extension is assumed by node
+
+app.use(mainRoutes); // Note that you do need this - it's what links a' the routes to the app variable.
+app.use('/cards',cardRoutes) // Here, we're using a path as a first argument. cardRoutes has already been
+                             // pointed to the requisite file, and the path parameter further 
+                             //
+
+
 app.use((req,res,next) => {  
   console.log("One");        
   next();                    
@@ -58,69 +70,8 @@ app.use((req,res,next) => {
 })
 
 
-// Main methods
+// The routes themselves
 
-app.get('/', (req, res) => { 
-  const nameFromCookie = req.cookies.username;
-  if (nameFromCookie) {
-  	res.render('index',{ name:nameFromCookie } );
-  } else {
-  	res.redirect('/hello');
-  }
-}); 
-
-
-app.get('/cards', (req, res) => {
-	const tryThis = () => {
-		const prompts = [
-			"Who is buried in Grant's tomb?",
-			"How do you install a dependency locally in npm?",
-			"How do you install a development dependency locally in npm?"
-		]
-		return prompts[Math.floor(Math.random() * prompts.length)];
-	}
-	const locals = {
-		prompt: tryThis(),
-		hint: "Try searching for it...",
-		colours
-	}
-	res.render('card',locals);
-})
-
-app.get('/index', (req, res) => { 
-  res.render('index') 
-}); 
-
-app.get('/sandbox', (req, res) => {
-	const locals = {
-		names: [
-				["Nick", "Bulbeck"],
-				["Lesley", "Bulbeck"],
-				["Nathan", "Bulbeck"],
-				["Bryony", "Bulbeck"],
-				]
-	}
-	res.render('sandbox',locals);
-})
-
-
-app.get('/hello', (req,res) => {
-  if (req.cookies.username) {
-  	res.redirect('/');
-  } else {
-  	res.render('hello');
-  }
-})
-
-app.post('/hello', (req,res) => {
-  res.cookie('username', req.body.username); 
-  res.redirect('/'); 
-})
-												
-app.post('/goodbye', (req,res) => {
-	res.clearCookie('username');
-	res.redirect('/hello');
-})
 
 
 // Error-handling middleware:

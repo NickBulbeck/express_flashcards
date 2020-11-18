@@ -100,7 +100,7 @@ app.use((req,res,next) => {
 
 // By convention, put your error-handler right at the end (c.f. try-catch-finally).
 
-// Main methods
+// Main methods - or, more accurately, routes
 
 app.get('/', (req, res) => { 
   const nameFromCookie = req.cookies.username;
