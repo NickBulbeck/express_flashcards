@@ -26,9 +26,10 @@ const cardRoutes = require('./routes/cards') // again, the .js extension is assu
 
 app.use(mainRoutes); // Note that you do need this - it's what links a' the routes to the app variable.
 app.use('/cards',cardRoutes) // Here, we're using a path as a first argument. cardRoutes has already been
-                             // pointed to the requisite file, and the path parameter further 
-                             //
-
+                             // pointed to the requisite file, and the path parameter further refines the
+                             // routes in ./routes/cards.js - it adds the suffix '/cards' to them all.
+// As a further note, we've used the flat file ./data/flashcardsData.json within ./routes/cards.js, which
+// contains further comments 
 
 app.use((req,res,next) => {  
   console.log("One");        
