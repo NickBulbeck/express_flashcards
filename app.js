@@ -29,14 +29,14 @@ app.use('/cards',cardRoutes) // Here, we're using a path as a first argument. ca
                              // pointed to the requisite file, and the path parameter further refines the
                              // routes in ./routes/cards.js - it adds the suffix '/cards' to them all.
 // As a further note, we've used the flat file ./data/flashcardsData.json within ./routes/cards.js, which
-// contains further comments 
+// contains further comments.
 
 app.use((req,res,next) => {  
-  console.log("One");        
+  // console.log("One");        
   next();                    
   },                         
   (req,res,next) => {           
-  console.log("One point one"); 
+  // console.log("One point one"); 
   next();                       
   }
 );
@@ -47,11 +47,11 @@ app.use((req,res,next) => {
 });                          
 
 app.use((req,res,next) => {
-  req.message = 'This message made it!' 
+  // req.message = 'This message made it!' 
   next();
 });
 app.use((req,res,next) => {
-  console.log(`Three: ${req.message}`);
+  // console.log(`Three: ${req.message}`);
   next(); 
           
 });
@@ -66,7 +66,7 @@ app.use((req,res,next) => {
 })           
             
 app.use((req,res,next) => {
-  console.log("world");
+  // console.log("world");
   next();
 })
 

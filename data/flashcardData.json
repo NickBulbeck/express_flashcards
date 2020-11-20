@@ -26,6 +26,10 @@
                 "question": "Which HTML element can contain JavaScript?",
                 "hint": "It starts with an 's'",
                 "answer": "<script>"
+            },
+            {
+                "question": "What should you see below, in this question in which 'hint' is undefined?",
+                "answer": "You should've seen a message saying '... there's nae hint for this yin!'"
             }
         ]
     }

@@ -19,19 +19,32 @@ const cards = data.cards;								 // out of a .json file.
 // Now: we'll use a request parameter here. It's prefixed with a colon in the route, and is part of the
 // request object's 'params' property. Express does this for us; that is, we create a foadyb variable, in
 // this case id, and express inserts it into req.params for us.
+// We'll also use a query string, like url?key1=value1&key2=value2
+// You check for a query string using req.query.foadybKey - req.query is a built-in property
+
+console.log("Is this file even still there?");
+
+
 router.get('/:id', (req, res) => {
-	// You can set up data and variables here, in as complex a fashion as you like - i.e. you can call
-	// a ton of other stuff - or you can add it in as a a variable in res.render. In the previous versions
-	// (in the ./notes folder) they were set up at this point in the function, before res.render(). Here, we'll
-	// set up the variable - in this case a nobject - in res.render() itself. And we'll use the request parameter.
-	res.render('card',{
-		prompt: cards[req.params.id].question,  // We could've set up id as, e.g., a random number based on
-		hint:   cards[req.params.id].hint,      // cards.length. But we're going to use set it explicitly as
-		answer: cards[req.params.id].answer	    // a parameter in the route the user types into the chrome
-	});											// address bar.
-})
+
+	let id = req.params.id;
+	if (id >= cards.length) {
+		console.log(`id = ${id}`);
+		id = Math.floor(Math.random() * cards.length);
+		console.log(`id = ${id}`);
+	}
+	const side = req.query.side || 'question';
+	const text = cards[id][side];
+	let hint = cards[id].hint;
+	if (side === 'answer') {
+		hint = null;
+	}
+
+	const templateData = { text,hint };
+	res.render('card', templateData);
+});
 
 module.exports = router;
 
 
-// back to 4:59.
+
