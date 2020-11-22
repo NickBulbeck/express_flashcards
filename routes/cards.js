@@ -24,11 +24,13 @@ const cards = data.cards;								 // out of a .json file.
 
 // This first yin redirects the user to a random card from the basic route
 // <<website>>/cards with no id:
-router.get('/', (req,res) => {	
-	const randomID = Math.floor(Math.random() * cards.length);
-	console.log(`/cards/${randomId}?side=question`);
-	res.redirect(`/cards/${randomId}?side=question`); // 
-});													  // 
+
+console.log("Does this file even register?");
+// router.get('/', (req,res) => {	
+// 	const randomID = Math.floor(Math.random() * cards.length);
+// 	console.log(`/cards/${randomId}?side=question`);
+// 	res.redirect(`/cards/${randomId}?side=question`); // 
+// });													  // 
 
 
 router.get('/:id', (req, res) => {
