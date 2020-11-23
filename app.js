@@ -84,9 +84,12 @@ app.use((req,res,next) => {
 })
 
 app.use((err,req,res,next) => {
-  res.locals.error = err; 
-  res.status(err.status); 
-                          
+  res.locals.error = err;
+  if (err.status) {         // pug templates create bizarre and anomalous 'undefined' error
+    res.status(err.status); // status values when they crash - which they can do for the
+  } else {                  // most trivial and inappropriate reasons. You need this code
+    res.status(500);        // to get any kind of meaningful error message.
+  }      
   res.render('error',err) 
 })
 
