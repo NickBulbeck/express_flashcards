@@ -52,8 +52,9 @@ router.get('/:id', (req, res) => {
 	const side = req.query.side || 'question';
 	const text = cards[id][side];
 	const hint = cards[id].hint;
+	const name = req.cookies.username;
 
-	const templateData = { id, text };
+	const templateData = { id, text, name };
 
 	if (side === 'question') {
 		templateData.hint = hint;
