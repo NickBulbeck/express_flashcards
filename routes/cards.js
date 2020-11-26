@@ -49,11 +49,11 @@ router.get('/:id', (req, res) => {
 		id = Math.floor(Math.random() * cards.length);
 		console.log(`id = ${id}`);
 	}
-	const side = req.query.side || 'question';
-	const text = cards[id][side];
-	const hint = cards[id].hint;
-	const name = req.cookies.username;
-
+	const side = req.query.side || 'question'; // At this point, Chalkers redirected to this same route, but
+	const text = cards[id][side];              // with side set as 'question', if side is null. This causes an 
+	const hint = cards[id].hint;			   // error unless you return router.redirect() because the code
+	const name = req.cookies.username;		   // otherwise continues through the function and bother ensues.
+											   // I prefer my way, to be honest.
 	const templateData = { id, text, name };
 
 	if (side === 'question') {

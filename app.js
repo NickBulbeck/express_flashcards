@@ -17,6 +17,16 @@ app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({extended:false})); 
 app.use(cookieParser()); 
 
+// static middleware:
+app.use(express.static('public'));  // There's one other, options, argument the .static() method
+                                    // can have. Otherwise, you pass it the route of the folder
+                                    // containing all the static methods. It's a foadyb folder,
+                                    // but by convention is called 'public'. And this means that the
+                                    // 'public' folder here is the **root** folder of the public 
+                                    // assets as far as the code is concerned. So, in this project,
+                                    // there's a public/stylesheets/style.css which we declare in our
+                                    // puggy pages as href=stylesheets/style.css.
+
 
 const mainRoutes = require('./routes'); // remember the convetion that if the ./routes folder 
                                     // contains a file called index.js, node will import it
