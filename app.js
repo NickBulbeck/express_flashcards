@@ -17,45 +17,17 @@ app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({extended:false})); 
 app.use(cookieParser()); 
 
-// static middleware:
-//*************************************************************
-// The basic middleware in express sets up what's called a static server. It looks like this:
-
-// app.use(express.static('public'));  
-
-                                    // There's one other, options, argument the .static() method
-                                    // can have. Otherwise, you pass it the route of the folder
-                                    // containing all the static methods. It's a foadyb folder,
-                                    // but by convention is called 'public'. And this means that the
-                                    // 'public' folder here is the **root** folder of the public 
-                                    // assets as far as the code is concerned. So, in this project,
-                                    // there's a public/stylesheets/style.css which we can even read
-                                    // in the browser at localhost:3000/stylesheets/style.css.
-// Because the route is at the root of the site, if we actually had a route called /stylesheets there could
-// theoretically be a conflict. Unlikely... but if there's any route in your public folder that could conflict
-// with a route in your main app, you get round it like this:
-app.use('/static',express.static('public')); // So now you visit localhost:3000/static/stylesheets/style.css
-// You then want to add the line <link rel="stylesheet" href="static/stylesheets/style.css"> to the header,
-// which is in views/layout.pug - you actually want link(rel='stylesheet' href='/static/stylesheets/style.css')
-// and I may need to research this a bit, because it'd be punctuated differently in an actual HTML file.
-// But think of it as a route - this is a static server, whose route is /static - hence the leading / in the href.
 
 
-// end of static stuff
-//*************************************************************
+app.use('/static',express.static('public')); 
 
-const mainRoutes = require('./routes'); // remember the convetion that if the ./routes folder 
-                                    // contains a file called index.js, node will import it
-                                    // automatically. We could have require('./routes/index.js')
-                                    // of course.
-const cardRoutes = require('./routes/cards') // again, the .js extension is assumed by node
+const mainRoutes = require('./routes');  
+                                   
+const cardRoutes = require('./routes/cards') 
 
-app.use(mainRoutes); // Note that you do need this - it's what links a' the routes to the app variable.
-app.use('/cards',cardRoutes) // Here, we're using a path as a first argument. cardRoutes has already been
-                             // pointed to the requisite file, and the path parameter further refines the
-                             // routes in ./routes/cards.js - it adds the suffix '/cards' to them all.
-// As a further note, we've used the flat file ./data/flashcardsData.json within ./routes/cards.js, which
-// contains further comments.
+app.use(mainRoutes); 
+app.use('/cards',cardRoutes) 
+
 
 app.use((req,res,next) => {  
   // console.log("One");        
@@ -95,10 +67,6 @@ app.use((req,res,next) => {
   // console.log("world");
   next();
 })
-
-
-// The routes themselves
-
 
 
 // Error-handling middleware:
