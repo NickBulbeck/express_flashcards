@@ -5,23 +5,4 @@ html(lang="en")
 		link(rel='stylesheet' href='/static/stylesheets/style.css')
 	body
 		include includes/header.pug
-		if name
-			h2 Welcome, #{name}!
-			form(action='/goodbye', method='post')
-				button(type='submit') Goodbye!
-		block content
-		include includes/footer.pug
-
-// block content is a keyword. It will be replaced by the stuff under 'block content'
-// in (in this case) card.pug, which extends layout.pug.
-
-//- 
-	index.pug will be rendered by default whenever the user visits the root url.
-	A bit like index.html or index.php is the default file for a web hingmy.
-	Also, there's some basic boilerplate pug code that's de rigeur for any web page:
-	doctype html
-	html(lang="en")
-		head
-			title Landing Page
-		body
-//
+		block main

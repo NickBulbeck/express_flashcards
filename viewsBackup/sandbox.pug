@@ -1,0 +1,17 @@
+doctype html
+html(lang="en")
+	head
+		title Nick's flash-caird sandbox
+	body
+		header
+			h1 Nick's sandbox
+		section#content
+			h3 Names Table
+				table
+					each name in names
+						tr
+							each part in name
+								td= part
+			p Some paragraph.
+		footer
+			p A sandbox
