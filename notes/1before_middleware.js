@@ -37,10 +37,11 @@ app.get('/', (req, res) => { // request, response - call them req and res by con
   			// and the value are the same, setting it as { name }. I think this is highly confusing, but it's something to
   			// be aware of.
   if (nameFromCookie) {
-  	res.render('index',{ name:nameFromCookie } );
-  } else {
-  	res.redirect('/hello');
-  }
+  	res.render('index',{ name:nameFromCookie } ); // The first arg passed to res.render is alway
+  } else {                                        // the path of the view engine file. The second
+  	res.redirect('/hello');                       // is a 'locals' object whose properties are
+                                  // accessible in the view engine file. Here, you just call the varialbe
+  }                               // 'name' - the object itself doesn't need naming in the pug file.
 }); 
 
 
